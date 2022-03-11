@@ -2,7 +2,7 @@
   <div id="app">
     <!-- App.vue -->
     <v-app>
-      <v-navigation-drawer app temporary v-model="drawer" class="">
+      <v-navigation-drawer app temporary v-model="drawer">
         <v-list>
           <v-list-item 
           v-for="link of links"
@@ -27,7 +27,9 @@
         @click="drawer = !drawer"
         ></v-app-bar-nav-icon>
 
-        <v-toolbar-title>Ad application</v-toolbar-title>
+        <v-toolbar-title >
+          <router-link to="/" tag="span" class="pointer">Ad application</router-link>
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
           <div class="hidden-sm-and-down">
@@ -42,6 +44,7 @@
             </v-btn>
           </div>
       </v-app-bar>
+      <br>
       <v-main>
           <router-view></router-view>
       </v-main>
@@ -67,5 +70,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped>
+  .pointer{
+    cursor: pointer;
+  }
 </style>
