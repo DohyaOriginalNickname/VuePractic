@@ -10,7 +10,7 @@
                             :src = "ad.imageSrc"
                         >
                             <div class="car-link">
-                                <v-btn class="error" :to="'/ad/'+ad.id">{{ad.title}}</v-btn>
+                                <v-btn class="error" :to="'/ad/'+ad.id">View Ad</v-btn>
                             </div>
                         </v-carousel-item>
                     </v-carousel>
@@ -27,9 +27,7 @@
                     :key="ad.id"
                     
                 >
-                    <v-card
-                        
-                    >
+                    <v-card>
                         <v-img
                         class="white--text align-end"
                         height="200px"
@@ -70,9 +68,6 @@ export default {
     data(){
         return{
             ads: [
-                // 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-                // 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-                // 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
                 {
                     title: 'First ad', 
                     description: 'Hello i am description', 
@@ -104,7 +99,7 @@ export default {
     .car-link{
         position: absolute;
         bottom: 50px;
-        left: 45%;
+        left: 45.5%;
         background: rgba(0, 0, 0, .5);
         transform: translate(-50% 0);
         padding: 5px 10px;
