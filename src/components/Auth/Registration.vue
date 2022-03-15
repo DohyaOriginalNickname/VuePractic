@@ -38,7 +38,8 @@
             <v-btn
                 class="mr-4"
                 @click="onSubmit"
-                :disabled = "!valid"
+                :loading = "loading"
+                :disabled = "!valid || loading"
             >
                 Registaration
             </v-btn>
@@ -47,8 +48,6 @@
 </template>
 
 <script>
-
-// import { required, maxLength, email } from 'vuelidate'
 export default {
     data(){
         return{
@@ -70,6 +69,12 @@ export default {
             ]
         }
     },
+    computed: {
+        loading (){
+            return this.$store.getters.loading
+        }
+    },
+
     methods:{
         onSubmit(){
             if(this.$refs.form.validate()){
@@ -77,18 +82,13 @@ export default {
                     email: this.email,
                     password: this.password
                 }
-
-                console.log(user)
-            }else{
-                console.log('ты долбаеб?')
+                this.$store.dispatch('registerUser', user)
+                .then(()=>{
+                    this.$router.push('/')
+                })
+                .catch(err => console.log(err))
             }
         }
     }
 }
 </script>
-
-<style scoped>
-    .box-shadow{
-        box-shadow: 2px;
-    }
-</style>

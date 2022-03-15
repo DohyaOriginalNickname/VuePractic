@@ -25,7 +25,6 @@
                     md4
                     v-for="ad of ads"
                     :key="ad.id"
-                    
                 >
                     <v-card>
                         <v-img
@@ -49,7 +48,6 @@
                             >
                                 Open
                             </v-btn>
-
                             <v-btn
                                 raised
                                 class="primary"

@@ -45,6 +45,7 @@ const routes = [
   },
   {
     path:'/ad/:id',
+    props: true,
     name: 'Ad',
     component: Ad,
     children:[

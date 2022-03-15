@@ -41,8 +41,7 @@
                 </v-layout>
                 <v-layout row wrap>
                     <v-flex xs12>
-                        <img src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg" alt="" height="100px">
-                        <img src="https://cdn.vuetifyjs.com/images/carousel/bird.jpg" alt="" height="100px">
+                        <img src="" height="100px">
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap>
@@ -79,9 +78,11 @@ export default {
                 const ad = {
                     title: this.title,
                     description: this.description,
-                    promo: this.promo
+                    promo: this.promo,
+                    imageSrc: 'https://timeweb.com/ru/community/article/1d/1d959c23e81024374895da086675b298.jpg'
                 }
-                console.log(ad)
+                
+                this.$store.dispatch('createAd', ad)
             }
         }
     }
