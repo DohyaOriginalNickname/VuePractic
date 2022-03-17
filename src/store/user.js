@@ -1,4 +1,4 @@
-import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
 
 
 class User{
@@ -22,10 +22,9 @@ export default{
 
             commit('clearError')
             commit('setLoading', true)
-            const auth = getAuth();
 
             try{
-                const user = await createUserWithEmailAndPassword(auth, email, password)
+                const user = await createUserWithEmailAndPassword(getAuth(), email, password)
                 commit('setUser', new User(user.uid))
                 commit('setLoading', false)
             }catch(error){
@@ -38,10 +37,9 @@ export default{
         async loginUser({commit}, {email,password}){
             commit('clearError')
             commit('setLoading', true)
-            const auth = getAuth();
 
             try{
-                const user = await signInWithEmailAndPassword(auth, email, password)
+                const user = await signInWithEmailAndPassword(getAuth(), email, password)
                 commit('setUser', new User(user.uid))
                 commit('setLoading', false)
             }catch(error){
@@ -49,6 +47,13 @@ export default{
                 commit('setError', error.message)
                 throw error
             }
+        },
+        autoLoginUser({commit}, payload){
+            commit('setUser', new User(payload.uid))
+        },
+        logoutUser({commit}){
+            signOut(getAuth())
+            commit('setUser', null)
         }
     },
     getters: {

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { initializeApp }  from "../node_modules/firebase/app"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
@@ -23,6 +24,12 @@ new Vue({
       messagingSenderId: "585738814608",
       appId: "1:585738814608:web:6a445b93b63e013638c415",
       measurementId: "G-C9N203764N"
+    })
+
+    onAuthStateChanged(getAuth(),user => {
+      if(user){
+        this.$store.dispatch('autoLoginUser', user)
+      }
     })
   } 
 }).$mount('#app')
