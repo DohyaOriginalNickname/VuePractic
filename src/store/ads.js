@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, push } from "firebase/database"
+import { getDatabase, ref, set, push, child, get} from "firebase/database"
 
 
 class Ad{
@@ -14,33 +14,14 @@ class Ad{
 
 export default {
     state:{
-        ads: [
-            {
-                title: 'First ad', 
-                description: 'Hello i am description', 
-                promo: true, 
-                imageSrc:'https://cdn.vuetifyjs.com/images/carousel/sky.jpg', 
-                id: '1' 
-            },
-            {
-                title: 'Second ad', 
-                description: 'Hello i am description', 
-                promo: true, 
-                imageSrc:'https://cdn.vuetifyjs.com/images/carousel/bird.jpg', 
-                id: '2' 
-            },
-            {
-                title: 'thirty ad', 
-                description: 'Hello i am description', 
-                promo: true, 
-                imageSrc:'https://cdn.vuetifyjs.com/images/carousel/planet.jpg', 
-                id: '3' 
-            }
-        ]
+        ads: []
     },
     mutations: {
         createAd(state, payload){
             state.ads.push(payload)
+        },
+        loadAds(state,payload){
+            state.ads = payload
         }
     },
     actions: {
@@ -68,6 +49,37 @@ export default {
                 })
             }catch(error){
                 commit('setError',error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
+
+        async fetchAds({commit}){
+            commit('clearError')
+            commit('setLoading', true)
+
+            const resultAds = []
+
+            try {
+                const dbRef = ref(getDatabase());
+                get(child(dbRef, `ads`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    Object.keys(snapshot.val()).forEach(key => {
+                        const ad = snapshot.val()[key]
+                        resultAds.push(
+                            new Ad(ad.title, ad.description, ad.ownerId, ad.imageSrc, ad.promo, key)
+                        )
+                    })
+                } else {
+                    console.log("No data available");
+                }
+                }).catch((error) => {
+                    console.error(error);
+                });
+                commit('loadAds', resultAds)
+                commit('setLoading', false)
+            } catch (error) {
+                commit('setError', error.message)
                 commit('setLoading', false)
                 throw error
             }
