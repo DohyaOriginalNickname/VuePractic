@@ -28,6 +28,7 @@
                         <v-btn
                             color="blue-grey"
                             class="ma-2 white--text"
+                            @click="triggerUpload"
                         >
                         Uploads
                             <v-icon
@@ -37,11 +38,18 @@
                                 mdi-cloud-upload
                             </v-icon>
                         </v-btn>
+                        <input 
+                        ref="fileInput" 
+                        type="file" 
+                        style="display: none;" 
+                        accept="image/*"
+                        @change="onFileChanged"
+                        >
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap>
                     <v-flex xs12>
-                        <img src="" height="100px">
+                        <img :src="imageSrc" height="100px" v-if="imageSrc">
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap>
@@ -57,7 +65,7 @@
                         <v-btn 
                         class="success" 
                         @click="createAd" 
-                        :disabled = "!valid || loading" 
+                        :disabled = "(!valid && !image) || loading" 
                         :loading = "loading"
                         >
                         Create add
@@ -76,7 +84,9 @@ export default {
             title:'',
             description: '',
             promo: false,
-            valid: false
+            valid: false,
+            image: null,
+            imageSrc: ''
         }
     },
     computed:{
@@ -86,7 +96,7 @@ export default {
     },
     methods:{
         createAd(){
-            if(this.$refs.form.validate()){
+            if(this.$refs.form.validate() &&  this.image){
                 const ad = {
                     title: this.title,
                     description: this.description,
@@ -100,6 +110,19 @@ export default {
                 })
                 .catch(() => {})
             }
+        },
+        triggerUpload(){
+            this.$refs.fileInput.click()
+        },
+        onFileChanged(event){
+            const file = event.target.files[0]
+
+            const reader = new FileReader()
+            reader.onload = () => {
+                this.imageSrc = reader.result
+            }
+            reader.readAsDataURL(file)
+            this.image = file
         }
     }
 }
