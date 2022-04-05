@@ -1,4 +1,5 @@
 import { getDatabase, ref, set, push, child, get} from "firebase/database"
+import { getStorage, ref as refStorage, uploadBytes, getDownloadURL   } from "firebase/storage"
 
 
 class Ad{
@@ -29,24 +30,31 @@ export default {
             commit('clearError')
             commit('setLoading', true)
 
+            const image = payload.image
+
             try{
+
+                const postListRef = ref(getDatabase(), 'ads')
+                const newPostRef = push(postListRef)
+                const imageExt = image.name.slice(image.name.lastIndexOf('.'))
+
+                await uploadBytes(refStorage(getStorage(), `ads/${newPostRef.key}${imageExt}`), image)
+                const imageSrc = await getDownloadURL(refStorage(getStorage(), `ads/${newPostRef.key}${imageExt}`))
+
                 const newAd = new Ad(
                     payload.title, 
                     payload.description, 
                     getters.user.id,
-                    payload.imageSrc, 
+                    imageSrc, 
                     payload.promo,
                 )
-                
-                const db = getDatabase()
-                const postListRef = ref(db, 'ads')
-                const newPostRef = push(postListRef)
-                await set(newPostRef, newAd)
+
                 commit('setLoading', false)
                 commit('createAd', {
                     ...newAd,
-                    id: newPostRef.key
+                    id: newPostRef.key,
                 })
+                await set(newPostRef, newAd)
             }catch(error){
                 commit('setError',error.message)
                 commit('setLoading', false)

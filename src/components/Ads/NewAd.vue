@@ -65,7 +65,7 @@
                         <v-btn 
                         class="success" 
                         @click="createAd" 
-                        :disabled = "(!valid && !image) || loading" 
+                        :disabled = "!valid || !image || loading" 
                         :loading = "loading"
                         >
                         Create add
@@ -96,12 +96,12 @@ export default {
     },
     methods:{
         createAd(){
-            if(this.$refs.form.validate() &&  this.image){
+            if(this.$refs.form.validate() && this.image){
                 const ad = {
                     title: this.title,
                     description: this.description,
                     promo: this.promo,
-                    imageSrc: 'https://timeweb.com/ru/community/article/1d/1d959c23e81024374895da086675b298.jpg'
+                    image: this.image
                 }
                 
                 this.$store.dispatch('createAd', ad)
@@ -116,7 +116,6 @@ export default {
         },
         onFileChanged(event){
             const file = event.target.files[0]
-
             const reader = new FileReader()
             reader.onload = () => {
                 this.imageSrc = reader.result
