@@ -2,7 +2,7 @@
     <v-container>
         <v-layout row>
             <v-flex xs12>
-                <v-card>
+                <v-card v-if="!loading">
                     <v-card>
                         <v-img 
                         :src="ad.imageSrc"
@@ -15,27 +15,38 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn class="warning">Edit</v-btn>
+                        <addEditModalAd :ad="ad"></addEditModalAd>
                         <v-btn class="success" raised>Buy</v-btn>
                     </v-card-actions> 
                 </v-card>
+                <div v-else class="text-xs-center">
+                    <v-progress-circular
+                        indeterminate
+                        :size="100"
+                        :width="4"
+                        color="purple"
+                    ></v-progress-circular>
+                </div>
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 
 <script>
+import EditModalAd from './EditModalAd.vue'
 export default {
     props: ['id'],
     computed: {
         ad(){
             const id = this.id
             return this.$store.getters.adById(id)
+        },
+        loading(){
+            return this.$store.getters.loading
         }
+    },
+    components: {
+        addEditModalAd: EditModalAd
     }
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, push, child, get} from "firebase/database"
+import { getDatabase, ref, set, push, child, get, update} from "firebase/database"
 import { getStorage, ref as refStorage, uploadBytes, getDownloadURL   } from "firebase/storage"
 
 
@@ -23,6 +23,14 @@ export default {
         },
         loadAds(state,payload){
             state.ads = payload
+        },
+        updateAd(state,{title,description,id}){
+            const ad = state.ads.find(i =>{
+                return i.id === id
+            })
+
+            ad.title = title
+            ad.description = description
         }
     },
     actions: {
@@ -69,8 +77,8 @@ export default {
             const resultAds = []
 
             try {
-                const dbRef = ref(getDatabase());
-                get(child(dbRef, `ads`)).then((snapshot) => {
+                const dbRef = ref(getDatabase())
+                await get(child(dbRef, `ads`)).then((snapshot) => {
                 if (snapshot.exists()) {
                     Object.keys(snapshot.val()).forEach(key => {
                         const ad = snapshot.val()[key]
@@ -85,6 +93,24 @@ export default {
                     console.error(error);
                 });
                 commit('loadAds', resultAds)
+                commit('setLoading', false)
+            } catch (error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
+
+        async updateAd({commit},{title,description,id}){
+            commit('clearError')
+            commit('setLoading', true)
+
+            try {
+                const dbRef = ref(getDatabase(), 'ads')
+                await update(child(dbRef, id), {title,description})
+                commit('updateAd', {
+                    title,description,id
+                })
                 commit('setLoading', false)
             } catch (error) {
                 commit('setError', error.message)
