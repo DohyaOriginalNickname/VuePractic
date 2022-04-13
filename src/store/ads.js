@@ -126,8 +126,10 @@ export default {
         promoAds(state){
             return state.ads.filter(ad => ad.promo)
         },
-        myAds(state){
-            return state.ads
+        myAds(state, getters){
+            return state.ads.filter(ad => {
+                return ad.ownerId === getters.user.id
+            })
         },
         adById(state){
             return adId => {
