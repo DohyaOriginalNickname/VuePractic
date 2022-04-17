@@ -45,7 +45,7 @@ export default {
             return this.$store.getters.loading
         },
         isOwner(){
-            return this.ad.ownerId === this.$store.getters.id
+            return this.ad.ownerId === this.$store.getters.user.id
         }
     },
     components: {
