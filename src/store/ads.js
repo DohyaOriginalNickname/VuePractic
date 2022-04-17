@@ -91,7 +91,7 @@ export default {
                 }
                 }).catch((error) => {
                     console.error(error);
-                });
+                })
                 commit('loadAds', resultAds)
                 commit('setLoading', false)
             } catch (error) {

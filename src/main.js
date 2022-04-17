@@ -6,6 +6,9 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
+import BuyModalComponent from './components/shared/BuyModal'
+
+Vue.component('app-buy-modal', BuyModalComponent)
 
 Vue.config.productionTip = false
 
